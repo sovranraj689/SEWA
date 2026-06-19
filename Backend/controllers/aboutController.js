@@ -1,13 +1,8 @@
 import About from "../models/About.js";
 
-// @desc    Get dynamic metrics and brand values
-// @route   GET /api/about
-// @access  Public
 export const getAboutContent = async (req, res) => {
   try {
     let content = await About.findOne();
-    
-    // Automatically initialize database with base numbers if row doesn't exist yet
     if (!content) {
       content = await About.create({
         yearsOfExcellence: 8,
@@ -31,9 +26,6 @@ export const getAboutContent = async (req, res) => {
   }
 };
 
-// @desc    Update metrics and brand values
-// @route   PUT /api/about
-// @access  Private (Admin Only)
 export const updateAboutContent = async (req, res) => {
   try {
     let content = await About.findOne();

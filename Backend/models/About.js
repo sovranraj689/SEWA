@@ -5,15 +5,15 @@ const AboutSchema = new mongoose.Schema(
     yearsOfExcellence: { type: Number, default: 8 },
     metrics: [
       {
-        value: { type: String, required: true }, // e.g. "1200+"
-        label: { type: String, required: true }  // e.g. "Happy Clients"
+        value: { type: String, required: true }, 
+        label: { type: String, required: true } 
       }
     ],
     values: [
       {
-        icon: { type: String, required: true },  // e.g. "🪡"
-        title: { type: String, required: true }, // e.g. "Craftsmanship"
-        desc: { type: String, required: true }   // e.g. "Every piece is handcrafted..."
+        icon: { type: String, required: true }, 
+        title: { type: String, required: true }, 
+        desc: { type: String, required: true }  
       }
     ]
   },

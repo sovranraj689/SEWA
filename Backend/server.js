@@ -15,7 +15,7 @@ const app = express();
 
 // ─── Middleware ───────────────────────────────────────────────
 app.use(cors({
-  origin: process.env.CLIENT_URL || "http://localhost:5173",
+  origin: process.env.CLIENT_URL || "https://swatisutra.onrender.com",
   credentials: true,
 }));
 app.use(express.json());
@@ -48,5 +48,5 @@ const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`\n🚀 SwatiArts API running on port ${PORT}`);
   console.log(`   Environment : ${process.env.NODE_ENV || "development"}`);
-  console.log(`   Health      : http://localhost:${PORT}/api/health\n`);
+  console.log(`   Health      : https://swatisutra.onrender.com/api/health\n`);
 });

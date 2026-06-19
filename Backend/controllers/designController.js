@@ -164,10 +164,6 @@ export const deleteReview = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
-
-// @GET /api/designs/reviews/top  [public]
-// Aggregates the best customer reviews across all active designs, for the
-// homepage testimonials section. Real reviews only — no placeholder data.
 export const getTopReviews = async (req, res) => {
   try {
     const { limit = 6, minRating = 4 } = req.query;
