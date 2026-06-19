@@ -60,9 +60,11 @@ function CustomerMessagesPanel() {
   const fetchMessages = async () => {
     setLoading(true);
     setError(null);
+    
     try {
       const token = localStorage.getItem("token");
-      const res = await fetch(`/api/contact${filter === "unread" ? "?unreadOnly=true" : ""}`, {
+      const API_BASE = import.meta.env.VITE_API_URL || "";
+      const res = await fetch(`${API_BASE}/api/contact${filter === "unread" ? "?unreadOnly=true" : ""}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (!res.ok) throw new Error(`Failed to load messages (${res.status})`);
@@ -90,7 +92,8 @@ function CustomerMessagesPanel() {
     if (next && !msg.isRead) {
       try {
         const token = localStorage.getItem("token");
-        await fetch(`/api/contact/${msg._id}/read`, {
+        const API_BASE = import.meta.env.VITE_API_URL || "";
+        await fetch(`${API_BASE}/api/contact/${msg._id}/read`, {
           method: "PUT",
           headers: { Authorization: `Bearer ${token}` },
         });
@@ -106,7 +109,8 @@ function CustomerMessagesPanel() {
     e.stopPropagation();
     try {
       const token = localStorage.getItem("token");
-      const res = await fetch(`/api/contact/${id}`, {
+      const API_BASE = import.meta.env.VITE_API_URL || "";
+      const res = await fetch(`${API_BASE}/api/contact/${id}`, {
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -273,8 +277,9 @@ export default function AdminDashboard() {
     setLoading(true);
     setError(null);
     try {
+      const API_BASE = import.meta.env.VITE_API_URL || "";
       const token = localStorage.getItem("token");
-      const res = await fetch("/api/admin/stats", {
+      const res = await fetch(`${API_BASE}/api/admin/stats`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 

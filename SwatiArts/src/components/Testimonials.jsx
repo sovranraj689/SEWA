@@ -52,7 +52,8 @@ export default function Testimonials() {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch("/api/designs/reviews/top?limit=6&minRating=4");
+      const API_BASE = import.meta.env.VITE_API_URL || "";
+      const res = await fetch(`${API_BASE}/api/designs/reviews/top?limit=6&minRating=4`);
       if (!res.ok) throw new Error(`Server error: ${res.status}`);
       const data = await res.json();
       setReviews(data.reviews || []);
@@ -68,13 +69,10 @@ export default function Testimonials() {
     fetchTopReviews();
   }, [fetchTopReviews]);
 
-  // Don't render the section at all if there's genuinely nothing to show —
-  // a testimonials section with zero real reviews would look broken/empty.
   if (!loading && !error && reviews.length === 0) return null;
 
   return (
     <section style={{ padding: "110px 24px", background: CREAM, position: "relative", overflow: "hidden" }}>
-      {/* Decorative oversized quote mark, theme-colored, subtle */}
       <div style={{
         position: "absolute", top: "-40px", left: "50%", transform: "translateX(-50%)",
         fontSize: "320px", fontFamily: "serif", color: "rgba(201,168,76,0.06)",

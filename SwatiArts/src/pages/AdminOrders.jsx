@@ -48,7 +48,8 @@ function ManageOrderDrawer({ order, onClose, onUpdated, onDeleted }) {
     setSaving(true);
     try {
       const token = localStorage.getItem("token");
-      const res = await fetch(`/api/orders/${order._id}/status`, {
+      const API_BASE = import.meta.env.VITE_API_URL || "";
+      const res = await fetch(`${API_BASE}/api/orders/${order._id}/status`, {
         method: "PUT",
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
         body: JSON.stringify({
@@ -69,15 +70,13 @@ function ManageOrderDrawer({ order, onClose, onUpdated, onDeleted }) {
     }
   };
 
-  // One-tap action — mirrors Flipkart/Myntra seller "Approve / Pack / Ship" buttons.
-  // Fires immediately using whatever quote/delivery/notes are currently filled in,
-  // without requiring a separate "Save Changes" click.
   const [quickActing, setQuickActing] = useState(null);
   const handleQuickAction = async (newStatus) => {
     setQuickActing(newStatus);
     try {
       const token = localStorage.getItem("token");
-      const res = await fetch(`/api/orders/${order._id}/status`, {
+      const API_BASE = import.meta.env.VITE_API_URL || "";
+      const res = await fetch(`${API_BASE}/api/orders/${order._id}/status`, {
         method: "PUT",
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
         body: JSON.stringify({
@@ -111,7 +110,8 @@ function ManageOrderDrawer({ order, onClose, onUpdated, onDeleted }) {
     setDeleting(true);
     try {
       const token = localStorage.getItem("token");
-      const res = await fetch(`/api/orders/${order._id}`, {
+      const API_BASE = import.meta.env.VITE_API_URL || "";
+      const res = await fetch(`${API_BASE}/api/orders/${order._id}`, {
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -369,7 +369,8 @@ export default function AdminOrders() {
       if (activeTab !== "all") params.set("status", activeTab);
       if (debouncedSearch) params.set("search", debouncedSearch);
 
-      const res = await fetch(`/api/orders?${params.toString()}`, {
+      const API_BASE = import.meta.env.VITE_API_URL || "";
+      const res = await fetch(`${API_BASE}/api/orders?${params.toString()}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 

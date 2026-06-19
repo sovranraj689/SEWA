@@ -87,7 +87,8 @@ function EditDesignModal({ design, onClose, onSaved }) {
         }
       });
 
-      const res = await fetch(`/api/designs/${design._id}`, {
+      const API_BASE = import.meta.env.VITE_API_URL || "";
+      const res = await fetch(`${API_BASE}/api/designs/${design._id}`, {
         method: "PUT",
         headers: { Authorization: `Bearer ${token}` },
         body: fd,
@@ -332,7 +333,8 @@ function DeleteConfirmModal({ design, onClose, onDeleted }) {
     setDeleting(true);
     try {
       const token = localStorage.getItem("token");
-      const res = await fetch(`/api/designs/${design._id}`, {
+      const API_BASE = import.meta.env.VITE_API_URL || "";
+      const res = await fetch(`${API_BASE}/api/designs/${design._id}`, {
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -967,7 +969,8 @@ export default function DesignGallery() {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch("/api/designs");
+      const API_BASE = import.meta.env.VITE_API_URL || "";
+      const res = await fetch(`${API_BASE}/api/designs`);
       if (!res.ok) throw new Error(`Server error: ${res.status}`);
       const data = await res.json();
       const list = Array.isArray(data) ? data : data.designs || [];

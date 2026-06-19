@@ -113,7 +113,8 @@ export default function CustomOrderModal({ onClose, designId = null }) {
       images.forEach((file) => fd.append("referenceImages", file));
 
       const token = localStorage.getItem("token");
-      const res = await fetch("/api/orders/custom", {
+      const API_BASE = import.meta.env.VITE_API_URL || "";
+      const res = await fetch(`${API_BASE}/api/orders/custom`, {
         method: "POST",
         headers: token ? { Authorization: `Bearer ${token}` } : {},
         body: fd,

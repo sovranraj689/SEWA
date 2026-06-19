@@ -43,7 +43,8 @@ export default function DesignDetail() {
     const fetchDesign = async () => {
       setLoading(true);
       try {
-        const res = await fetch(`/api/designs/${id}`);
+        const API_BASE = import.meta.env.VITE_API_URL || "";
+        const res = await fetch(`${API_BASE}/api/designs/${id}`);
 
         // 1. Check if the server responded with a 2xx status code
         if (!res.ok) {
@@ -80,7 +81,8 @@ export default function DesignDetail() {
     if (!token) return toast.error("Please login to submit a review");
     setSubmitting(true);
     try {
-      const res = await fetch(`/api/designs/${id}/reviews`, {
+      const API_BASE = import.meta.env.VITE_API_URL || "";
+      const res = await fetch(`${API_BASE}/api/designs/${id}/reviews`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

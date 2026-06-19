@@ -59,13 +59,10 @@ function Home() {
         </div>
       </section>
 
-      {/* Testimonials — now backend-driven, pulls real reviews from /api/designs/reviews/top.
-          Renders nothing if there are no qualifying reviews yet, so no dummy data ever shows. */}
+      {/* Testimonials*/}
       <Testimonials />
 
-      {/* CTA Banner — now opens the real CustomOrderModal with full backend-connected form
-          (name/email/phone, cloth type, work area, embroidery type, budget, timeline,
-          description, and image upload) instead of just linking to a page. */}
+      {/* CTA Banner */}
       <CustomOrderCTA />
 
       <Footer />

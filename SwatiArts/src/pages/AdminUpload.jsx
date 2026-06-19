@@ -40,7 +40,8 @@ function AdminUpload() {
         fd.append(k, Array.isArray(v) ? JSON.stringify(v) : v)
       );
 
-      const res = await fetch("/api/designs", {
+      const API_BASE = import.meta.env.VITE_API_URL || "";
+      const res = await fetch(`${API_BASE}/api/designs`, {
         method: "POST",
         headers: { Authorization: `Bearer ${token}` },
         body: fd,

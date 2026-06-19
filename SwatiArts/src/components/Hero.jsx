@@ -11,10 +11,11 @@ function Hero() {
   });
   const [loading, setLoading] = useState(true);
 
-  // ✅ FIX: Wrap fetch in useCallback so it can be called on demand
   const fetchHeroStats = useCallback(async () => {
+    const API_BASE = import.meta.env.VITE_API_URL || "";
+
     try {
-      const res = await fetch("/api/designs");
+      const res = await fetch(`${API_BASE}/api/designs`);
       if (!res.ok) throw new Error("Failed to load stats");
       const data = await res.json();
       const designArray = Array.isArray(data) ? data : data.designs || [];
