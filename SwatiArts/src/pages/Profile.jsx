@@ -44,6 +44,7 @@ export default function Profile() {
         navigate("/login");
         return;
       }
+      const API_BASE = import.meta.env?.VITE_API_URL || "";
       const res = await fetch(`${API_BASE}/api/auth/me`, {
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -75,6 +76,7 @@ export default function Profile() {
     setSaving(true);
     try {
       const token = localStorage.getItem("token");
+      const API_BASE = import.meta.env?.VITE_API_URL || "";
       const res = await fetch(`${API_BASE}/api/auth/profile`, {
         method: "PUT",
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
@@ -105,6 +107,7 @@ export default function Profile() {
     setChangingPw(true);
     try {
       const token = localStorage.getItem("token");
+      const API_BASE = import.meta.env?.VITE_API_URL || "";
       const res = await fetch(`${API_BASE}/api/auth/change-password`, {
         method: "PUT",
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
