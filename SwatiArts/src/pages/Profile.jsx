@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import toast from "react-hot-toast";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
-import { API_BASE } from "../api/api";
+import { API_BASE } from "../api/auth";
 
 const S = { fontFamily: "'Lato', sans-serif" };
 const P = { fontFamily: "'Playfair Display', serif" };
