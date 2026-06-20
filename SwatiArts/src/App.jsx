@@ -14,7 +14,7 @@ import Contact from "./pages/Contact";
 import DesignDetail from "./pages/DesignDetail";
 import Testimonials from "./components/Testimonials";
 import Profile from "./pages/Profile";
-import Wishlist from " .pages/Wishlist";
+import Wishlist from "./pages/Wishlist"; // Path theek kar diya gaya hai
 
 function App() {
   return (
