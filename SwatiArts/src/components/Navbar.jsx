@@ -231,6 +231,18 @@ export default function Navbar() {
                     My Orders
                   </Link>
                 )}
+                <Link
+                  to="/profile"
+                  aria-label="Profile"
+                  className={`flex items-center justify-center w-9 h-9 rounded-full border transition-all mr-1
+                    ${isActive("/profile") ? "bg-[#C9943A] border-[#C9943A] text-[#1A0500]" : "border-[#C9943A]/30 text-[#C9943A] hover:bg-[#C9943A]/10"}`}
+                  title="Profile"
+                >
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                    <circle cx="12" cy="7" r="4" />
+                  </svg>
+                </Link>
                 <button onClick={handleLogout} className="px-4 py-2 rounded border border-[#C9943A]/40 text-[#C9943A] hover:bg-[#C9943A]/10 text-xs font-semibold uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap">
                   Logout
                 </button>
@@ -326,12 +338,29 @@ export default function Navbar() {
                 )}
               </nav>
 
+<<<<<<< HEAD
               <div className="shrink-0 px-6 py-5 border-t border-[#C9943A]/15 bg-[#1A0500]/50 space-y-4">
+=======
+              <div className="shrink-0 px-6 py-5 border-t border-[#C9943A]/15 bg-[#1A0500]/50 space-y-3">
+>>>>>>> a2c6309b24285a4f94d067a1c6fbcde84c191989
                 <div className="flex items-center justify-between">
                   <span className="font-sans text-[11px] uppercase tracking-widest text-[#C9943A]/50 font-semibold">Language</span>
                   <LanguageToggle language={language} onSelect={switchLanguage} />
                 </div>
 
+<<<<<<< HEAD
+=======
+                {user && (
+                  <Link
+                    to="/profile"
+                    onClick={() => setMenuOpen(false)}
+                    className="flex items-center justify-center gap-2 w-full text-center py-3 rounded-lg border border-[#C9943A]/40 text-[#C9943A] font-semibold uppercase tracking-wider text-xs transition-all hover:bg-[#C9943A]/10 cursor-pointer"
+                  >
+                    👤 My Profile
+                  </Link>
+                )}
+
+>>>>>>> a2c6309b24285a4f94d067a1c6fbcde84c191989
                 {user ? (
                   <button onClick={handleLogout} className="w-full text-center py-3.5 rounded-lg bg-gradient-to-r from-[#E0B84B] to-[#C9A84C] text-[#1A0500] font-bold uppercase tracking-wider text-xs shadow-md cursor-pointer transition-all hover:brightness-105">
                     Logout Account

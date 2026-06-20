@@ -43,7 +43,11 @@ function App() {
         <Route path="/contact" element={<Contact />} />
         <Route path="/design/:id" element={<DesignDetail />} />
         <Route path="/testimonials/:id" element={<Testimonials />} />
+<<<<<<< HEAD
         <Route path="/profile" element={<Profile />} />
+=======
+        <Route path="/profile/:id" element={<Profile />} />
+>>>>>>> a2c6309b24285a4f94d067a1c6fbcde84c191989
       </Routes>
     </BrowserRouter>
   );

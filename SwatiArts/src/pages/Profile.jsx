@@ -300,4 +300,8 @@ export default function Profile() {
       <Footer />
     </div>
   );
+
 }
+
+
+
