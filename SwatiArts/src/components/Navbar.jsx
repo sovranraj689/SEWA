@@ -298,7 +298,6 @@ export default function Navbar() {
               </div>
 
               <nav className="flex-1 overflow-y-auto px-6 py-4 space-y-0">
-                {/* Dynamically Inject Admin or My Orders based on User Session inside the list */}
                 {NAV_LINKS.map((link, i) => (
                   <motion.div key={link.name} initial={{ opacity: 0, x: 18 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: (i + 1) * 0.045 }}>
                     <Link to={link.path} onClick={() => setMenuOpen(false)} className={`flex items-center font-serif text-lg py-3.5 border-b border-[#C9943A]/8 transition-all ${isActive(link.path) ? "text-[#C9943A] pl-2 font-bold" : "text-[#FAF3E0]/85 hover:text-[#C9943A]"}`}>
@@ -323,6 +322,7 @@ export default function Navbar() {
                     </Link>
                   </motion.div>
                 )}
+                
                 {user && (
                   <motion.div initial={{ opacity: 0, x: 18 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.02 }}>
                     {isAdmin ? (
@@ -338,18 +338,12 @@ export default function Navbar() {
                 )}
               </nav>
 
-<<<<<<< HEAD
-              <div className="shrink-0 px-6 py-5 border-t border-[#C9943A]/15 bg-[#1A0500]/50 space-y-4">
-=======
               <div className="shrink-0 px-6 py-5 border-t border-[#C9943A]/15 bg-[#1A0500]/50 space-y-3">
->>>>>>> a2c6309b24285a4f94d067a1c6fbcde84c191989
                 <div className="flex items-center justify-between">
                   <span className="font-sans text-[11px] uppercase tracking-widest text-[#C9943A]/50 font-semibold">Language</span>
                   <LanguageToggle language={language} onSelect={switchLanguage} />
                 </div>
 
-<<<<<<< HEAD
-=======
                 {user && (
                   <Link
                     to="/profile"
@@ -360,7 +354,6 @@ export default function Navbar() {
                   </Link>
                 )}
 
->>>>>>> a2c6309b24285a4f94d067a1c6fbcde84c191989
                 {user ? (
                   <button onClick={handleLogout} className="w-full text-center py-3.5 rounded-lg bg-gradient-to-r from-[#E0B84B] to-[#C9A84C] text-[#1A0500] font-bold uppercase tracking-wider text-xs shadow-md cursor-pointer transition-all hover:brightness-105">
                     Logout Account
