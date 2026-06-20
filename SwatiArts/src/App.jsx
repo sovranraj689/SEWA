@@ -13,6 +13,7 @@ import About from "./pages/About";
 import Contact from "./pages/Contact";
 import DesignDetail from "./pages/DesignDetail";
 import Testimonials from "./components/Testimonials";
+import Profile from "./paages/Profile";
 
 function App() {
   return (
@@ -42,6 +43,7 @@ function App() {
         <Route path="/contact" element={<Contact />} />
         <Route path="/design/:id" element={<DesignDetail />} />
         <Route path="/testimonials/:id" element={<Testimonials />} />
+        <Route path="/profile/:id" element={<Profile />} />
       </Routes>
     </BrowserRouter>
   );
