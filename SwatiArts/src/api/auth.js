@@ -1,4 +1,6 @@
-const BASE = "/api/auth";
+export const API_BASE = import.meta.env.VITE_API_URL || "";
+
+const BASE = `${API_BASE}/api/auth`;
 
 export const registerUser = async (formData) => {
   const res = await fetch(`${BASE}/register`, {
