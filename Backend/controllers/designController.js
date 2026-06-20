@@ -58,13 +58,31 @@ export const createDesign = async (req, res) => {
   try {
     const { title, description, category, embroideryType, fabric, price, tags, deliveryTime, isFeatured } = req.body;
 
+    if (!title || !category || price === undefined) {
+      return res.status(400).json({ message: "Title, category, and price are required" });
+    }
+
+    const numericPrice = Number(price);
+    if (isNaN(numericPrice)) {
+      return res.status(400).json({ message: `Invalid price value: "${price}"` });
+    }
+
     // images uploaded via multer-cloudinary
     const images = req.files?.map((f) => f.path) || [];
 
+    let parsedTags = [];
+    if (tags) {
+      try {
+        parsedTags = JSON.parse(tags);
+      } catch {
+        return res.status(400).json({ message: "Invalid tags format — must be JSON array string" });
+      }
+    }
+
     const design = await Design.create({
       title, description, category, embroideryType, fabric,
-      price: Number(price),
-      tags: tags ? JSON.parse(tags) : [],
+      price: numericPrice,
+      tags: parsedTags,
       deliveryTime,
       isFeatured: isFeatured === "true",
       images,
@@ -73,11 +91,11 @@ export const createDesign = async (req, res) => {
 
     res.status(201).json({ message: "Design created", design });
   } catch (err) {
+    console.error("❌ createDesign error:", err.message);
     res.status(500).json({ message: err.message });
   }
 };
 
-// @PUT /api/designs/:id  [admin]
 export const updateDesign = async (req, res) => {
   try {
     const design = await Design.findById(req.params.id);
@@ -100,7 +118,6 @@ export const updateDesign = async (req, res) => {
   }
 };
 
-// @DELETE /api/designs/:id  [admin]
 export const deleteDesign = async (req, res) => {
   try {
     const design = await Design.findById(req.params.id);
@@ -119,7 +136,6 @@ export const deleteDesign = async (req, res) => {
   }
 };
 
-// @POST /api/designs/:id/reviews  [user]
 export const addReview = async (req, res) => {
   try {
     const { rating, comment } = req.body;
@@ -164,6 +180,7 @@ export const deleteReview = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
+
 export const getTopReviews = async (req, res) => {
   try {
     const { limit = 6, minRating = 4 } = req.query;
