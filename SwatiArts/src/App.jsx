@@ -13,7 +13,7 @@ import About from "./pages/About";
 import Contact from "./pages/Contact";
 import DesignDetail from "./pages/DesignDetail";
 import Testimonials from "./components/Testimonials";
-import Profile from "./paages/Profile";
+import Profile from "./pages/Profile";
 
 function App() {
   return (
