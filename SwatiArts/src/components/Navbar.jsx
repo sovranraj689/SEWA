@@ -62,6 +62,7 @@ export default function Navbar() {
   const location = useLocation();
   const navigate = useNavigate();
   const user = JSON.parse(localStorage.getItem("user") || "null");
+  const isAdmin = !!user?.isAdmin;
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 50);
@@ -90,8 +91,12 @@ export default function Navbar() {
     };
   }, [menuOpen]);
 
-  // Sync wishlist badge
+  // Sync wishlist badge (skipped entirely for admins — they don't use a wishlist)
   useEffect(() => {
+    if (isAdmin) {
+      setWishlistCount(0);
+      return;
+    }
     const readWishlist = () => {
       try {
         const stored = JSON.parse(localStorage.getItem("wishlist") || "[]");
@@ -109,7 +114,7 @@ export default function Navbar() {
       window.removeEventListener("storage", readWishlist);
       window.removeEventListener("wishlistUpdated", readWishlist);
     };
-  }, [location.pathname]);
+  }, [location.pathname, isAdmin]);
 
   useEffect(() => {
     const syncLanguage = () => {
@@ -198,23 +203,26 @@ export default function Navbar() {
           <div className="hidden lg:flex items-center gap-4 shrink-0">
             <LanguageToggle language={language} onSelect={switchLanguage} />
 
-            <Link
-              to="/wishlist"
-              aria-label="Wishlist"
-              className={`relative flex items-center justify-center w-10 h-10 rounded-full transition-all
-                ${isActive("/wishlist") ? "text-[#1A0500] bg-[#C9943A]" : "text-[#C9943A] hover:bg-[#C9943A]/10"}`}
-            >
-              <HeartIcon filled={wishlistCount > 0} />
-              {wishlistCount > 0 && (
-                <span className="absolute -top-1 -right-1 flex items-center justify-center min-w-[18px] h-[18px] px-[3px] rounded-full bg-gradient-to-r from-[#E0B84B] to-[#C9A84C] text-[#1A0500] text-[10px] font-bold leading-none shadow">
-                  {wishlistCount > 99 ? "99+" : wishlistCount}
-                </span>
-              )}
-            </Link>
+            {/* Wishlist — hidden entirely for admin accounts */}
+            {!isAdmin && (
+              <Link
+                to="/wishlist"
+                aria-label="Wishlist"
+                className={`relative flex items-center justify-center w-10 h-10 rounded-full transition-all
+                  ${isActive("/wishlist") ? "text-[#1A0500] bg-[#C9943A]" : "text-[#C9943A] hover:bg-[#C9943A]/10"}`}
+              >
+                <HeartIcon filled={wishlistCount > 0} />
+                {wishlistCount > 0 && (
+                  <span className="absolute -top-1 -right-1 flex items-center justify-center min-w-[18px] h-[18px] px-[3px] rounded-full bg-gradient-to-r from-[#E0B84B] to-[#C9A84C] text-[#1A0500] text-[10px] font-bold leading-none shadow">
+                    {wishlistCount > 99 ? "99+" : wishlistCount}
+                  </span>
+                )}
+              </Link>
+            )}
 
             {user ? (
               <>
-                {user.isAdmin ? (
+                {isAdmin ? (
                   <Link to="/admin" className="font-sans text-xs tracking-widest uppercase text-[#C9943A] font-semibold hover:brightness-110 transition-all mr-2">
                     Admin Panel
                   </Link>
@@ -277,16 +285,35 @@ export default function Navbar() {
                 </button>
               </div>
 
-              <div className="flex items-center justify-between px-6 py-3 border-b border-[#C9943A]/10 bg-[#1A0500]/20 shrink-0">
-                <span className="font-sans text-[11px] uppercase tracking-widest text-[#C9943A]/50 font-semibold">Language</span>
-                <LanguageToggle language={language} onSelect={switchLanguage} />
-              </div>
-
               <nav className="flex-1 overflow-y-auto px-6 py-4 space-y-0">
                 {/* Dynamically Inject Admin or My Orders based on User Session inside the list */}
+                {NAV_LINKS.map((link, i) => (
+                  <motion.div key={link.name} initial={{ opacity: 0, x: 18 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: (i + 1) * 0.045 }}>
+                    <Link to={link.path} onClick={() => setMenuOpen(false)} className={`flex items-center font-serif text-lg py-3.5 border-b border-[#C9943A]/8 transition-all ${isActive(link.path) ? "text-[#C9943A] pl-2 font-bold" : "text-[#FAF3E0]/85 hover:text-[#C9943A]"}`}>
+                      {link.name}
+                    </Link>
+                  </motion.div>
+                ))}
+
+                {/* Mobile Wishlist Option — hidden entirely for admin accounts */}
+                {!isAdmin && (
+                  <motion.div initial={{ opacity: 0, x: 18 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: (NAV_LINKS.length + 1) * 0.045 }}>
+                    <Link to="/wishlist" onClick={() => setMenuOpen(false)} className={`flex items-center justify-between font-serif text-lg py-3.5 border-b border-[#C9943A]/8 transition-all ${isActive("/wishlist") ? "text-[#C9943A] pl-2 font-bold" : "text-[#FAF3E0]/85 hover:text-[#C9943A]"}`}>
+                      <span className="flex items-center gap-2.5">
+                        <HeartIcon filled={wishlistCount > 0} className="w-4 h-4" />
+                        Wishlist
+                      </span>
+                      {wishlistCount > 0 && (
+                        <span className="flex items-center justify-center min-w-[22px] h-[22px] px-1.5 rounded-full bg-[#C9943A]/15 text-[#C9943A] text-xs font-bold">
+                          {wishlistCount > 99 ? "99+" : wishlistCount}
+                        </span>
+                      )}
+                    </Link>
+                  </motion.div>
+                )}
                 {user && (
                   <motion.div initial={{ opacity: 0, x: 18 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.02 }}>
-                    {user.isAdmin ? (
+                    {isAdmin ? (
                       <Link to="/admin" onClick={() => setMenuOpen(false)} className={`flex items-center font-serif text-lg py-3.5 border-b border-[#C9943A]/15 text-[#C9943A] font-bold bg-[#C9943A]/5 px-2 rounded`}>
                         ✨ Admin Dashboard
                       </Link>
@@ -297,32 +324,14 @@ export default function Navbar() {
                     )}
                   </motion.div>
                 )}
-
-                {NAV_LINKS.map((link, i) => (
-                  <motion.div key={link.name} initial={{ opacity: 0, x: 18 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: (i + 1) * 0.045 }}>
-                    <Link to={link.path} onClick={() => setMenuOpen(false)} className={`flex items-center font-serif text-lg py-3.5 border-b border-[#C9943A]/8 transition-all ${isActive(link.path) ? "text-[#C9943A] pl-2 font-bold" : "text-[#FAF3E0]/85 hover:text-[#C9943A]"}`}>
-                      {link.name}
-                    </Link>
-                  </motion.div>
-                ))}
-
-                {/* Mobile Wishlist Option */}
-                <motion.div initial={{ opacity: 0, x: 18 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: (NAV_LINKS.length + 1) * 0.045 }}>
-                  <Link to="/wishlist" onClick={() => setMenuOpen(false)} className={`flex items-center justify-between font-serif text-lg py-3.5 border-b border-[#C9943A]/8 transition-all ${isActive("/wishlist") ? "text-[#C9943A] pl-2 font-bold" : "text-[#FAF3E0]/85 hover:text-[#C9943A]"}`}>
-                    <span className="flex items-center gap-2.5">
-                      <HeartIcon filled={wishlistCount > 0} className="w-4 h-4" />
-                      Wishlist
-                    </span>
-                    {wishlistCount > 0 && (
-                      <span className="flex items-center justify-center min-w-[22px] h-[22px] px-1.5 rounded-full bg-[#C9943A]/15 text-[#C9943A] text-xs font-bold">
-                        {wishlistCount > 99 ? "99+" : wishlistCount}
-                      </span>
-                    )}
-                  </Link>
-                </motion.div>
               </nav>
 
-              <div className="shrink-0 px-6 py-5 border-t border-[#C9943A]/15 bg-[#1A0500]/50">
+              <div className="shrink-0 px-6 py-5 border-t border-[#C9943A]/15 bg-[#1A0500]/50 space-y-4">
+                <div className="flex items-center justify-between">
+                  <span className="font-sans text-[11px] uppercase tracking-widest text-[#C9943A]/50 font-semibold">Language</span>
+                  <LanguageToggle language={language} onSelect={switchLanguage} />
+                </div>
+
                 {user ? (
                   <button onClick={handleLogout} className="w-full text-center py-3.5 rounded-lg bg-gradient-to-r from-[#E0B84B] to-[#C9A84C] text-[#1A0500] font-bold uppercase tracking-wider text-xs shadow-md cursor-pointer transition-all hover:brightness-105">
                     Logout Account
