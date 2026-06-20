@@ -216,7 +216,7 @@ export default function Navbar() {
               <>
                 {user.isAdmin ? (
                   <Link to="/admin" className="font-sans text-xs tracking-widest uppercase text-[#C9943A] font-semibold hover:brightness-110 transition-all mr-2">
-                    Admin
+                    Admin Panel
                   </Link>
                 ) : (
                   <Link to="/my-orders" className={`font-sans text-xs tracking-widest uppercase font-semibold transition-all mr-2 pb-1 border-b ${isActive("/my-orders") ? "text-[#C9943A] border-[#C9943A]" : "text-[#FAF3E0]/80 border-transparent hover:text-[#C9943A]"}`}>
@@ -234,20 +234,8 @@ export default function Navbar() {
             )}
           </div>
 
-          {/* Mobile UI (Icons moved exclusively to menu drawer) */}
+          {/* Mobile Hamburguer Toggle Button */}
           <div className="flex items-center gap-2.5 lg:hidden">
-            {!user && (
-              <Link to="/login" className="hidden sm:inline-flex items-center px-4 py-2 rounded bg-gradient-to-r from-[#E0B84B] to-[#C9A84C] text-[#1A0500] text-xs font-bold uppercase tracking-wider transition-all hover:brightness-105 shadow-md whitespace-nowrap">
-                Login
-              </Link>
-            )}
-
-            {user && !user.isAdmin && (
-              <Link to="/my-orders" className={`hidden sm:inline-flex items-center px-3 py-2 border rounded-lg text-xs font-medium tracking-wider uppercase transition-all whitespace-nowrap ${isActive("/my-orders") ? "text-[#1A0500] bg-[#C9943A] border-[#C9943A]" : "text-[#C9943A] border-[#C9943A]/25 bg-[#2A0D00]/40 hover:bg-[#C9943A]/10"}`}>
-                Orders
-              </Link>
-            )}
-
             <button
               onClick={() => setMenuOpen((v) => !v)}
               aria-label="Toggle menu"
@@ -295,8 +283,23 @@ export default function Navbar() {
               </div>
 
               <nav className="flex-1 overflow-y-auto px-6 py-4 space-y-0">
+                {/* Dynamically Inject Admin or My Orders based on User Session inside the list */}
+                {user && (
+                  <motion.div initial={{ opacity: 0, x: 18 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.02 }}>
+                    {user.isAdmin ? (
+                      <Link to="/admin" onClick={() => setMenuOpen(false)} className={`flex items-center font-serif text-lg py-3.5 border-b border-[#C9943A]/15 text-[#C9943A] font-bold bg-[#C9943A]/5 px-2 rounded`}>
+                        ✨ Admin Dashboard
+                      </Link>
+                    ) : (
+                      <Link to="/my-orders" onClick={() => setMenuOpen(false)} className={`flex items-center font-serif text-lg py-3.5 border-b border-[#C9943A]/8 transition-all ${isActive("/my-orders") ? "text-[#C9943A] pl-2 font-bold" : "text-[#FAF3E0]/85"}`}>
+                        📦 My Orders
+                      </Link>
+                    )}
+                  </motion.div>
+                )}
+
                 {NAV_LINKS.map((link, i) => (
-                  <motion.div key={link.name} initial={{ opacity: 0, x: 18 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.045 }}>
+                  <motion.div key={link.name} initial={{ opacity: 0, x: 18 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: (i + 1) * 0.045 }}>
                     <Link to={link.path} onClick={() => setMenuOpen(false)} className={`flex items-center font-serif text-lg py-3.5 border-b border-[#C9943A]/8 transition-all ${isActive(link.path) ? "text-[#C9943A] pl-2 font-bold" : "text-[#FAF3E0]/85 hover:text-[#C9943A]"}`}>
                       {link.name}
                     </Link>
@@ -304,7 +307,7 @@ export default function Navbar() {
                 ))}
 
                 {/* Mobile Wishlist Option */}
-                <motion.div initial={{ opacity: 0, x: 18 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: NAV_LINKS.length * 0.045 }}>
+                <motion.div initial={{ opacity: 0, x: 18 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: (NAV_LINKS.length + 1) * 0.045 }}>
                   <Link to="/wishlist" onClick={() => setMenuOpen(false)} className={`flex items-center justify-between font-serif text-lg py-3.5 border-b border-[#C9943A]/8 transition-all ${isActive("/wishlist") ? "text-[#C9943A] pl-2 font-bold" : "text-[#FAF3E0]/85 hover:text-[#C9943A]"}`}>
                     <span className="flex items-center gap-2.5">
                       <HeartIcon filled={wishlistCount > 0} className="w-4 h-4" />
