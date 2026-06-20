@@ -334,18 +334,25 @@ export default function Navbar() {
                         📦 My Orders
                       </Link>
                     )}
-                    <Link to="/profile" onClick={() => setMenuOpen(false)} className={`flex items-center font-serif text-lg py-3.5 border-b border-[#C9943A]/8 transition-all ${isActive("/profile") ? "text-[#C9943A] pl-2 font-bold" : "text-[#FAF3E0]/85 hover:text-[#C9943A]"}`}>
-                      👤 My Profile
-                    </Link>
                   </motion.div>
                 )}
               </nav>
 
-              <div className="shrink-0 px-6 py-5 border-t border-[#C9943A]/15 bg-[#1A0500]/50 space-y-4">
+              <div className="shrink-0 px-6 py-5 border-t border-[#C9943A]/15 bg-[#1A0500]/50 space-y-3">
                 <div className="flex items-center justify-between">
                   <span className="font-sans text-[11px] uppercase tracking-widest text-[#C9943A]/50 font-semibold">Language</span>
                   <LanguageToggle language={language} onSelect={switchLanguage} />
                 </div>
+
+                {user && (
+                  <Link
+                    to="/profile"
+                    onClick={() => setMenuOpen(false)}
+                    className="flex items-center justify-center gap-2 w-full text-center py-3 rounded-lg border border-[#C9943A]/40 text-[#C9943A] font-semibold uppercase tracking-wider text-xs transition-all hover:bg-[#C9943A]/10 cursor-pointer"
+                  >
+                    👤 My Profile
+                  </Link>
+                )}
 
                 {user ? (
                   <button onClick={handleLogout} className="w-full text-center py-3.5 rounded-lg bg-gradient-to-r from-[#E0B84B] to-[#C9A84C] text-[#1A0500] font-bold uppercase tracking-wider text-xs shadow-md cursor-pointer transition-all hover:brightness-105">
