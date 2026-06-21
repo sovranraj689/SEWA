@@ -66,8 +66,8 @@ function Hero() {
           alt=""
           style={{
             position: "absolute",
-            left: "-120px",
-            top: "0px",
+            left: "-90px",
+            bottom: "20px",
             width: "500px",
             filter: "brightness(0) saturate(0) contrast(160%) drop-shadow(0 0 10px rgba(0,0,0,0.8))",
             transform: "rotate(-8deg)",
@@ -78,7 +78,7 @@ function Hero() {
           alt=""
           style={{
             position: "absolute",
-            right: "-120px",
+            right: "-90px",
             top: "0px",
             width: "500px",
             filter: "brightness(0) saturate(0) contrast(160%) drop-shadow(0 0 10px rgba(0,0,0,0.8))",
