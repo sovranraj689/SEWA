@@ -131,3 +131,17 @@ textarea,
 select {
   background: transparent !important;
 }
+
+
+@media (max-width: 768px) {
+  .your-column-class {
+    width: 100%; 
+    display: block; 
+  }
+}
+@media (max-width: 480px) {
+  .your-column-class {
+    width: 100%; 
+    display: block; 
+  }
+}
