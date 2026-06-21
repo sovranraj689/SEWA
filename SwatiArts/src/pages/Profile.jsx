@@ -303,7 +303,6 @@
 
 // }
 
-
 import { useState, useEffect, useCallback } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
@@ -574,6 +573,7 @@ export default function Profile() {
 
   const [addressModal, setAddressModal] = useState(null); // null | "new" | addressObject
   const [deletingAddress, setDeletingAddress] = useState(null);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false); // NEW — mobile navbar dropdown
 
   const [orders, setOrders] = useState([]);
   const [ordersLoading, setOrdersLoading] = useState(true);
@@ -744,10 +744,87 @@ export default function Profile() {
           </h1>
         </div>
 
+        {/* ── Mobile-only navbar-style bar: hamburger left, name + DP right ── */}
+        <div className="profile-mobile-bar" style={{
+          display: "none", alignItems: "center", justifyContent: "space-between",
+          background: DARK, border: `1px solid rgba(201,168,76,0.2)`,
+          padding: "14px 18px", marginBottom: "24px", position: "relative", zIndex: 50,
+        }}>
+          <button
+            onClick={() => setMobileMenuOpen((v) => !v)}
+            aria-label="Menu"
+            style={{ background: "none", border: "none", cursor: "pointer", display: "flex", flexDirection: "column", gap: "4px", padding: "8px" }}
+          >
+            <span style={{ width: "20px", height: "2px", background: GOLD, display: "block" }} />
+            <span style={{ width: "20px", height: "2px", background: GOLD, display: "block" }} />
+            <span style={{ width: "20px", height: "2px", background: GOLD, display: "block" }} />
+          </button>
+
+          <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+            <div style={{ textAlign: "right" }}>
+              <div style={{ ...S, fontSize: "13px", color: CREAM, fontWeight: 700, lineHeight: 1.2 }}>{user.name}</div>
+              <div style={{ ...S, fontSize: "10px", color: "rgba(245,230,200,0.45)", letterSpacing: "1px", textTransform: "uppercase" }}>
+                {visibleSections.find((s) => s.key === activeSection)?.label}
+              </div>
+            </div>
+            <div style={{
+              width: "38px", height: "38px", borderRadius: "50%", flexShrink: 0,
+              background: `linear-gradient(135deg, ${GOLD}, ${MAROON})`,
+              display: "flex", alignItems: "center", justifyContent: "center",
+              color: CREAM, ...P, fontSize: "15px", fontWeight: 700, border: `2px solid ${CREAM}`,
+            }}>
+              {initial}
+            </div>
+          </div>
+
+          <AnimatePresence>
+            {mobileMenuOpen && (
+              <>
+                <div onClick={() => setMobileMenuOpen(false)} style={{ position: "fixed", inset: 0, zIndex: 55 }} />
+                <motion.nav
+                  initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }}
+                  style={{ position: "absolute", top: "calc(100% + 6px)", left: 0, right: 0, background: DARK, border: `1px solid rgba(201,168,76,0.2)`, padding: "8px", zIndex: 60 }}
+                >
+                  {visibleSections.map((s) => {
+                    const active = activeSection === s.key;
+                    return (
+                      <button
+                        key={s.key}
+                        onClick={() => { setActiveSection(s.key); setMobileMenuOpen(false); }}
+                        style={{
+                          width: "100%", display: "flex", alignItems: "center", gap: "12px",
+                          ...S, fontSize: "13px", padding: "13px 14px", border: "none", cursor: "pointer", textAlign: "left",
+                          background: active ? "rgba(201,168,76,0.12)" : "transparent",
+                          color: active ? GOLD : "rgba(245,230,200,0.65)",
+                          fontWeight: active ? 700 : 400,
+                          borderLeft: active ? `3px solid ${GOLD}` : "3px solid transparent",
+                        }}
+                      >
+                        <span style={{ fontSize: "14px", width: "18px", textAlign: "center" }}>{s.icon}</span>
+                        {s.label}
+                        {s.key === "wishlist" && wishlistCount > 0 && (
+                          <span style={{ marginLeft: "auto", ...S, fontSize: "10px", background: GOLD, color: DARK, padding: "1px 7px", fontWeight: 700 }}>
+                            {wishlistCount}
+                          </span>
+                        )}
+                        {s.key === "orders" && activeOrders > 0 && (
+                          <span style={{ marginLeft: "auto", ...S, fontSize: "10px", background: GOLD, color: DARK, padding: "1px 7px", fontWeight: 700 }}>
+                            {activeOrders}
+                          </span>
+                        )}
+                      </button>
+                    );
+                  })}
+                </motion.nav>
+              </>
+            )}
+          </AnimatePresence>
+        </div>
+
         <div style={{ display: "grid", gridTemplateColumns: "260px 1fr", gap: "32px", alignItems: "start" }} className="profile-grid">
 
-          {/* ── Sidebar ── */}
-          <div style={{ background: DARK, border: `1px solid rgba(201,168,76,0.2)`, position: "sticky", top: "24px" }}>
+          {/* ── Sidebar (desktop only) ── */}
+          <div className="profile-sidebar-desktop" style={{ background: DARK, border: `1px solid rgba(201,168,76,0.2)`, position: "sticky", top: "24px" }}>
             {/* Identity block */}
             <div style={{ padding: "28px 24px", textAlign: "center", borderBottom: "1px solid rgba(201,168,76,0.15)" }}>
               <div style={{
@@ -1062,9 +1139,10 @@ export default function Profile() {
       <style>{`
         @media (max-width: 800px) {
           .profile-grid { grid-template-columns: 1fr !important; }
+          .profile-sidebar-desktop { display: none !important; }
+          .profile-mobile-bar { display: flex !important; }
         }
       `}</style>
     </div>
   );
 }
-
