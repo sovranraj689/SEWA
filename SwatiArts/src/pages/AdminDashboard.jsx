@@ -399,7 +399,7 @@ export default function AdminDashboard() {
                 Workspace Core
               </span>
               <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-stone-900 mt-3">
-                Welcome Back, Admin ✨
+                Welcome To, Admin ✨ Pannel
               </h1>
               <p className="text-stone-600 mt-2 text-sm sm:text-base leading-relaxed">
                 Seamlessly monitor custom embroidery metrics, user accounts, and design catalogs from your exclusive tracking hub.

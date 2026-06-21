@@ -72,7 +72,7 @@ export default function About() {
               Our Story & Heritage
             </span>
             <h1 className="font-serif text-5xl md:text-7xl font-bold text-[#FAF3E0] tracking-tight leading-tight">
-              About <span className="text-[#C9A84C] italic font-normal font-sans block sm:inline">SwatiArts</span>
+              About <span className="text-[#C9A84C] italic font-normal font-sans block sm:inline">SwatiSutra</span>
             </h1>
             <div className="w-12 h-[1px] bg-[#C9A84C]/40 mx-auto mt-8" />
           </motion.div>
@@ -91,7 +91,7 @@ export default function About() {
           >
             {/* Left Column: Handcoded Fixed Brand Story text for performance */}
             <motion.div variants={fadeInUp} className="lg:col-span-7 space-y-6">
-              <span className="text-[10px] font-bold tracking-[0.3em] uppercase text-[#C9A84C] block">Est. Meerut</span>
+              <span className="text-[10px] font-bold tracking-[0.3em] uppercase text-[#C9A84C] block">Bhojipura Bareilly</span>
               <h2 className="font-serif text-4xl md:text-5xl font-bold text-stone-900 leading-tight">
                 A Legacy of Pure <br />
                 <span className="text-[#C9A84C] italic font-normal font-sans">Artisan Craftsmanship</span>
@@ -99,7 +99,7 @@ export default function About() {
               <div className="w-16 h-1 bg-[#C9A84C] rounded-full" />
               
               <p className="font-serif text-lg sm:text-xl text-stone-600/90 leading-relaxed pt-2">
-                SwatiArts was born from a deep passion for preserving India's rich embroidery traditions. Founded in Meerut, we bring together skilled artisans who have mastered techniques passed down through generations.
+                SwatiArts was born from a deep passion for preserving India's rich embroidery traditions. Founded in Bareilly, we bring together skilled artisans who have mastered techniques passed down through generations.
               </p>
               <p className="font-serif text-lg sm:text-xl text-stone-600/90 leading-relaxed">
                 Every stitch we create tells a unique story — of patience, ultimate artistry, and love for the craft. From delicate necklines to elaborate bridal ensembles, we transform raw fabric into timeless custom heirlooms.

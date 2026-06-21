@@ -8,7 +8,7 @@ function Footer() {
 
           {/* Brand */}
           <div>
-            <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: "28px", color: "#C9A84C", marginBottom: "12px" }}>SwatiArts</h3>
+            <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: "28px", color: "#C9A84C", marginBottom: "12px" }}>SwatiSutra</h3>
             <p style={{ fontFamily: "'Lato', sans-serif", fontSize: "10px", letterSpacing: "4px", textTransform: "uppercase", color: "rgba(201,168,76,0.5)", marginBottom: "20px" }}>Royal Embroidery</p>
             <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "16px", color: "rgba(250,243,224,0.6)", lineHeight: 1.7 }}>
               Crafting timeless embroidery with love, tradition, and exceptional artistry since 2010.
@@ -59,7 +59,7 @@ function Footer() {
         {/* Bottom bar */}
         <div style={{ borderTop: "1px solid rgba(201,168,76,0.15)", paddingTop: "32px", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "16px" }}>
           <p style={{ fontFamily: "'Lato', sans-serif", fontSize: "12px", color: "rgba(250,243,224,0.3)", letterSpacing: "1px" }}>
-            © 2026 SwatiArts. All rights reserved.
+            © 2026 SwatiSutra. All rights reserved.
           </p>
           <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
             <div style={{ height: "1px", width: "40px", background: "rgba(201,168,76,0.3)" }} />

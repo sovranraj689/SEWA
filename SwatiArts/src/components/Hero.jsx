@@ -160,7 +160,7 @@ function Hero() {
             textShadow: "0 0 25px rgba(0,0,0,0.6)",
           }}
         >
-          Swati <span style={{ color: "#C9A84C", fontStyle: "italic" }}>Arts</span>
+          Swati <span style={{ color: "#C9A84C", fontStyle: "italic" }}>Sutra</span>
         </motion.h1>
 
         {/* Tagline */}

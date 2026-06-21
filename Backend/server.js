@@ -2,8 +2,8 @@ import "dotenv/config";
 import express from "express";
 import cors from "cors";
 import morgan from "morgan";
-import path from "path"; // 1. Path module import kiya
-import { fileURLToPath } from "url"; // ES Modules ke liye zaroori hai
+import path from "path"; 
+import { fileURLToPath } from "url"; 
 import connectDB from "./config/db.js";
 import authRoutes from "./routes/authRoutes.js";
 import designRoutes from "./routes/designRoutes.js";
@@ -11,7 +11,7 @@ import orderRoutes from "./routes/orderRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
 import messageRoutes from "./routes/messageRoutes.js";
 
-// __dirname setup (ES Modules ke liye)
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 

@@ -96,7 +96,7 @@ function Contact() {
           initial="hidden" animate="show" custom={1} variants={fadeUp}
           style={{ ...P, fontSize: "clamp(38px, 6vw, 60px)", color: "#F5E6C8", fontWeight: 700, lineHeight: 1.15, marginBottom: "20px" }}
         >
-          Contact <span style={{ color: "#C9943A", fontStyle: "italic" }}>SwatiArts</span>
+          Contact <span style={{ color: "#C9943A", fontStyle: "italic" }}>SwatiSutra</span>
         </motion.h1>
 
         <motion.div
@@ -192,7 +192,7 @@ function Contact() {
               }}
             >
               <FaMapMarkerAlt style={{ color: "#C9943A", fontSize: "28px" }} />
-              <span style={{ ...C, fontSize: "16px", color: "rgba(44,15,0,0.5)" }}>Find us in Muradnagar, Ghaziabad</span>
+              <span style={{ ...C, fontSize: "16px", color: "rgba(44,15,0,0.5)" }}>Find us in Bhojipura, Bareilly</span>
             </motion.div>
           </div>
 

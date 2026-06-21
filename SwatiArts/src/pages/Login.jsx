@@ -156,7 +156,7 @@ function Login() {
 
             {/* Custom Brand Header with 30% Opacity */}
             <h1 className="font-logo-script text-5xl font-semibold tracking-wider  bg-gradient-to-b from-[#4A2600]/70 via-[#a1671b] to-[#f7bd49] bg-clip-text text-transparent select-none antialiased py-2">
-              SwatiArts
+              SwatiSutra
             </h1>
 
             <p className="mt-2 text-[12px] uppercase tracking-[8px] text-[#2D1200]/70">

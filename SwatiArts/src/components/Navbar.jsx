@@ -173,7 +173,7 @@ export default function Navbar() {
             </div>
             <div className="leading-tight">
               <div className="font-serif text-lg sm:text-xl font-bold text-[#C9943A] tracking-wide leading-tight">
-                SwatiArts
+                SwatiSutra
               </div>
               <div className="xs:block font-sans text-[9px] sm:text-[10px] tracking-[6px] sm:tracking-[5px] uppercase text-[#C9943A]/60 font-semibold mt-0.5">
                 Royal Hand Embroidery
