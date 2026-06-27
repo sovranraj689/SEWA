@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import toast from "react-hot-toast";
@@ -14,6 +14,37 @@ import {
   Cell,
 } from "recharts";
 import Navbar from "../components/Navbar";
+
+/**
+ * Delays rendering children until the wrapper div has a real measured size.
+ * Fixes the recharts "width/height must be > 0" console error that fires when
+ * a chart mounts inside a hidden tab or an element that hasn't been painted yet.
+ */
+function ChartSizer({ height = 288, children }) {
+  const ref = useRef(null);
+  const [ready, setReady] = useState(false);
+
+  useEffect(() => {
+    if (!ref.current) return;
+    // Use ResizeObserver so we re-check whenever the container actually gets a size
+    const ro = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        if (entry.contentRect.width > 0 && entry.contentRect.height > 0) {
+          setReady(true);
+          ro.disconnect();
+        }
+      }
+    });
+    ro.observe(ref.current);
+    return () => ro.disconnect();
+  }, []);
+
+  return (
+    <div ref={ref} style={{ width: "100%", height, minWidth: 0, minHeight: height }}>
+      {ready && children}
+    </div>
+  );
+}
 
 /* ─── Constants ─────────────────────────────────────────── */
 const STATUS_META = {
@@ -723,7 +754,7 @@ export default function AdminDashboard() {
                     <h2 className="text-lg font-bold text-stone-900">Order Growth Curve</h2>
                     <p className="text-xs text-stone-500">Monthly order volume this year</p>
                   </div>
-                  <div className="h-72 w-full">
+                  <ChartSizer height={288}>
                     <ResponsiveContainer width="100%" height="100%">
                       <AreaChart data={trendData} margin={{ top:10,right:5,left:-25,bottom:0 }}>
                         <defs>
@@ -738,7 +769,7 @@ export default function AdminDashboard() {
                         <Area type="monotone" dataKey="orders" stroke="#C9943A" strokeWidth={3} fillOpacity={1} fill="url(#curveGradient)" />
                       </AreaChart>
                     </ResponsiveContainer>
-                  </div>
+                  </ChartSizer>
                 </motion.div>
 
                 <motion.div variants={itemVariants}
@@ -751,7 +782,7 @@ export default function AdminDashboard() {
                     <div className="h-56 flex items-center justify-center text-sm text-stone-400 font-serif italic">No active orders yet.</div>
                   ) : (
                     <>
-                      <div className="h-56">
+                      <ChartSizer height={224}>
                         <ResponsiveContainer width="100%" height="100%">
                           <PieChart>
                             <Pie data={pieData} dataKey="value" innerRadius={65} outerRadius={85} paddingAngle={4}>
@@ -760,7 +791,7 @@ export default function AdminDashboard() {
                             <Tooltip />
                           </PieChart>
                         </ResponsiveContainer>
-                      </div>
+                      </ChartSizer>
                       <div className="flex justify-center gap-4 flex-wrap text-xs pt-2">
                         {pieData.map((d) => (
                           <div key={d.name} className="flex items-center gap-1.5 font-medium text-stone-600">
