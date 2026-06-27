@@ -19,7 +19,6 @@ export const getDashboardStats = async (req, res) => {
       Order.find().sort({ createdAt: -1 }).limit(5).populate("user", "name email"),
     ]);
 
-    // Monthly order trend (last 6 months)
     const sixMonthsAgo = new Date();
     sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
     const monthlyTrend = await Order.aggregate([
@@ -39,18 +38,35 @@ export const getDashboardStats = async (req, res) => {
 };
 
 // @GET /api/admin/users
+// ── Updated: now includes orderCount + addressCount for the Users panel ──
 export const getAllUsers = async (req, res) => {
   try {
-    const { page = 1, limit = 20, search } = req.query;
+    const { search } = req.query;
+
     const filter = {};
-    if (search) filter.$or = [
-      { name: { $regex: search, $options: "i" } },
-      { email: { $regex: search, $options: "i" } },
-    ];
-    const skip = (Number(page) - 1) * Number(limit);
-    const total = await User.countDocuments(filter);
-    const users = await User.find(filter).sort({ createdAt: -1 }).skip(skip).limit(Number(limit));
-    res.json({ users, total, page: Number(page), pages: Math.ceil(total / limit) });
+    if (search) {
+      filter.$or = [
+        { name:  { $regex: search, $options: "i" } },
+        { email: { $regex: search, $options: "i" } },
+      ];
+    }
+
+    const users = await User.find(filter).sort({ createdAt: -1 }).lean();
+
+    // Attach per-user order count in parallel
+    const usersWithStats = await Promise.all(
+      users.map(async (user) => {
+        const orderCount = await Order.countDocuments({ user: user._id });
+        return {
+          ...user,
+          orderCount,
+          addressCount: user.addresses?.length || 0,
+          lastActive:   user.lastActive || user.updatedAt || null,
+        };
+      })
+    );
+
+    res.json({ users: usersWithStats, total: usersWithStats.length });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -67,6 +83,60 @@ export const updateUser = async (req, res) => {
     );
     if (!user) return res.status(404).json({ message: "User not found" });
     res.json({ message: "User updated", user });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+// @GET /api/admin/activity?limit=40
+// ── New: streams recent platform actions to the Activity Feed ──
+export const getActivityFeed = async (req, res) => {
+  try {
+    const limit = Math.min(parseInt(req.query.limit) || 40, 100);
+
+    // Fetch recent orders — each one becomes an "order_placed" activity event
+    const recentOrders = await Order.find({})
+      .sort({ createdAt: -1 })
+      .limit(limit)
+      .populate("user", "name email")
+      .lean();
+
+    const orderActivities = recentOrders.map((order) => ({
+      _id:       order._id,
+      type:      "order_placed",
+      user: {
+        name:  order.user?.name  || order.name  || "Unknown",
+        email: order.user?.email || order.email || "",
+      },
+      meta: {
+        clothType: order.clothType,
+      },
+      createdAt: order.createdAt,
+    }));
+
+    // Fetch recently registered users — each becomes a "register" activity event
+    const recentUsers = await User.find({ isAdmin: false })
+      .sort({ createdAt: -1 })
+      .limit(10)
+      .lean();
+
+    const registerActivities = recentUsers.map((user) => ({
+      _id:       `reg_${user._id}`,
+      type:      "register",
+      user: {
+        name:  user.name  || "Unknown",
+        email: user.email || "",
+      },
+      meta: {},
+      createdAt: user.createdAt,
+    }));
+
+    // Merge and sort all activities by date descending
+    const activities = [...orderActivities, ...registerActivities]
+      .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+      .slice(0, limit);
+
+    res.json({ activities });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
