@@ -38,33 +38,30 @@ export const getDashboardStats = async (req, res) => {
 };
 
 // @GET /api/admin/users
-// ── Updated: now includes orderCount + addressCount for the Users panel ──
+// Uses aggregation to get orderCount in ONE query instead of N queries
 export const getAllUsers = async (req, res) => {
   try {
-    const { search } = req.query;
+    // Step 1: get all users as plain objects
+    const users = await User.find({}).sort({ createdAt: -1 }).lean();
 
-    const filter = {};
-    if (search) {
-      filter.$or = [
-        { name:  { $regex: search, $options: "i" } },
-        { email: { $regex: search, $options: "i" } },
-      ];
-    }
+    // Step 2: get order counts for ALL users in a single aggregation
+    const orderCounts = await Order.aggregate([
+      { $group: { _id: "$user", count: { $sum: 1 } } },
+    ]);
 
-    const users = await User.find(filter).sort({ createdAt: -1 }).lean();
+    // Build a lookup map: userId string → count
+    const orderCountMap = {};
+    orderCounts.forEach(({ _id, count }) => {
+      if (_id) orderCountMap[_id.toString()] = count;
+    });
 
-    // Attach per-user order count in parallel
-    const usersWithStats = await Promise.all(
-      users.map(async (user) => {
-        const orderCount = await Order.countDocuments({ user: user._id });
-        return {
-          ...user,
-          orderCount,
-          addressCount: user.addresses?.length || 0,
-          lastActive:   user.lastActive || user.updatedAt || null,
-        };
-      })
-    );
+    // Step 3: merge stats into each user
+    const usersWithStats = users.map((user) => ({
+      ...user,
+      orderCount:   orderCountMap[user._id.toString()] || 0,
+      addressCount: user.addresses?.length || 0,
+      lastActive:   user.lastActive || user.updatedAt || null,
+    }));
 
     res.json({ users: usersWithStats, total: usersWithStats.length });
   } catch (err) {
@@ -89,12 +86,10 @@ export const updateUser = async (req, res) => {
 };
 
 // @GET /api/admin/activity?limit=40
-// ── New: streams recent platform actions to the Activity Feed ──
 export const getActivityFeed = async (req, res) => {
   try {
     const limit = Math.min(parseInt(req.query.limit) || 40, 100);
 
-    // Fetch recent orders — each one becomes an "order_placed" activity event
     const recentOrders = await Order.find({})
       .sort({ createdAt: -1 })
       .limit(limit)
@@ -102,36 +97,29 @@ export const getActivityFeed = async (req, res) => {
       .lean();
 
     const orderActivities = recentOrders.map((order) => ({
-      _id:       order._id,
-      type:      "order_placed",
+      _id:  order._id,
+      type: "order_placed",
       user: {
         name:  order.user?.name  || order.name  || "Unknown",
         email: order.user?.email || order.email || "",
       },
-      meta: {
-        clothType: order.clothType,
-      },
+      meta:      { clothType: order.clothType },
       createdAt: order.createdAt,
     }));
 
-    // Fetch recently registered users — each becomes a "register" activity event
     const recentUsers = await User.find({ isAdmin: false })
       .sort({ createdAt: -1 })
       .limit(10)
       .lean();
 
     const registerActivities = recentUsers.map((user) => ({
-      _id:       `reg_${user._id}`,
-      type:      "register",
-      user: {
-        name:  user.name  || "Unknown",
-        email: user.email || "",
-      },
+      _id:  `reg_${user._id}`,
+      type: "register",
+      user: { name: user.name || "Unknown", email: user.email || "" },
       meta: {},
       createdAt: user.createdAt,
     }));
 
-    // Merge and sort all activities by date descending
     const activities = [...orderActivities, ...registerActivities]
       .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
       .slice(0, limit);
