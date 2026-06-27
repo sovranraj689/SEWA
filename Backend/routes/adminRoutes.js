@@ -3,7 +3,7 @@ import {
   getDashboardStats,
   getAllUsers,
   updateUser,
-  getActivityFeed,        // ← add this
+  getActivityFeed,
 } from "../controllers/adminController.js";
 import { protect, adminOnly } from "../middleware/auth.js";
 
@@ -14,7 +14,7 @@ router.use(protect, adminOnly);
 
 router.get("/stats", getDashboardStats);
 router.get("/users", getAllUsers);
-router.get("/activity", getActivityFeed);   // ← add this
+router.get("/activity", getActivityFeed);   
 router.put("/users/:id", updateUser);
 
 export default router;
